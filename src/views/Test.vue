@@ -1,7 +1,9 @@
 <template>
-
+    <div>
+        <el-button type="primary">test</el-button>
+    </div>
 </template>
-<script>
+<script setup>
+
 </script>
-<style>
-</style>
+<style lang="scss" scoped></style>
