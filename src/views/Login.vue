@@ -13,7 +13,7 @@
                     </el-input>
                 </el-form-item>
                 <!-- 登录密码 -->
-                <el-form-item prop="password">
+                <el-form-item prop="password" v-if="opType == 1">
                     <el-input type="password" size="large" placeholder="请输入密码" v-model="formData.password" show-password>
                         <template #prefix>
                             <span class="iconfont icon-password"></span>
@@ -37,8 +37,8 @@
                         <el-checkbox v-model="formData.rememberMe">记住我</el-checkbox>
                     </div>
                     <div class="no-account">
-                        <a href="javascript:void(0)" class="a-link">忘记密码？</a>
-                        <a href="javascript:void(0)" class="a-link">没有账号</a>
+                        <a href="javascript:void(0)" class="a-link" @click="showPanel(2)">忘记密码？</a>
+                        <a href="javascript:void(0)" class="a-link" @click="showPanel(0)">没有账号</a>
                     </div>
                 </el-form-item>
                 <!-- 登录按钮 -->
@@ -55,7 +55,14 @@ import { ref, reactive, getCurrentInstance, nextTick } from "vue"
 const { proxy } = getCurrentInstance();
 
 const api = {
-    checkCode: "/api/checkCode",
+    checkCode: "/api/user/checkCode",
+};
+
+//操作类型 0:注册 1：登录 2：重置密码
+const opType = ref(0);
+
+const showPanel = (type) => {
+    opType.value = type;
 };
 
 const formData = ref({});
