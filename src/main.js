@@ -14,10 +14,13 @@ import '@/assets/base.scss'
 //引入cookies
 import VueCookies from 'vue-cookies'
 
+//自定义组件
+import Dialog from '@/components/Dialog.vue'
 
 const app = createApp(App);
 
 app.use(router);
 app.use(ElementPlus);
 
+app.component("Dialog", Dialog)
 app.mount("#app");
