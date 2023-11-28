@@ -2,7 +2,7 @@
     <div class="login-body">
         <div class="bg"></div>
         <div class="login-panel">
-            <el-form class="login-register" :model="FormData" :rules="rules" ref="formDataRef" @submit.prevent>
+            <el-form class="login-register" :model="formData" :rules="rules" ref="formDataRef" @submit.prevent>
                 <div class="login-title">仿百度云盘</div>
                 <!-- input输入 -->
                 <el-form-item prop="email">
@@ -30,7 +30,7 @@
                                     <span class="iconfont icon-checkcode"></span>
                                 </template>
                             </el-input>
-                            <el-button class="send-mail-btn" type="primary" size="large">
+                            <el-button class="send-mail-btn" type="primary" size="large" @click="getEmailCode">
                                 获取验证码
                             </el-button>
                         </div>
@@ -110,6 +110,29 @@
                 </el-form-item>
             </el-form>
         </div>
+        <Dialog :show="dialogConfig4SendMailCode.show" :title="dialogConfig4SendMailCode.title"
+            :buttons="dialogConfig4SendMailCode.buttons" width="500px" :showCancel="false"
+            @close="dialogConfig4SendMailCode.show = false">
+            <el-form :model="formData4SendMailCode" ref="formData4SendMailCodeRef" :rules="rules" label-width="80px">
+                <!-- input输入 -->
+                <el-form-item label="邮箱">
+                    {{ formData.email }}
+                </el-form-item>
+                <!-- input输入 -->
+                <el-form-item label="验证码" prop="checkCode">
+                    <div class="check-code-panel">
+                        <el-input size="large" placeholder="请输入验证码" v-model.trim="dialogConfig4SendMailCode.checkCode">
+                            <template #prefix>
+                                <span class="iconfont icon-checkcode"></span>
+                            </template>
+                        </el-input>
+                        <img :src="checkCodeUrl4SendMailCode" class="check-code" @click="changeCheckCode(1)">
+                    </div>
+                </el-form-item>
+
+            </el-form>
+
+        </Dialog>
     </div>
 </template>
 <script setup>
@@ -130,14 +153,47 @@ const showPanel = (type) => {
 const formData = ref({});
 const formDataRef = ref();
 const rules = {
-    title: [{ required: true, message: '请输入内容' }]
+    email: [{ required: true, message: '请输入正确的邮箱！' }]
 };
 
 const checkCodeUrl = ref(api.checkCode);
+const checkCodeUrl4SendMailCode = ref(api.checkCode);
 
 const changeCheckCode = (type) => {
-    checkCodeUrl.value = api.checkCode + "?type=" + type + "&time=" + new Date().getTime();
+    if (type == 0) {
+        checkCodeUrl.value = api.checkCode + "?type=" + type + "&time=" + new Date().getTime();
+    } else {
+        checkCodeUrl4SendMailCode.value = api.checkCode + "?type=" + type + "&time=" + new Date().getTime();
+    }
 }
+
+//发送邮箱验证码
+const formData4SendMailCode = ref({});
+const formData4SendMailCodeRef = ref();
+
+const dialogConfig4SendMailCode = reactive({
+    show: false,
+    title: "发送邮箱验证码",
+    buttons: [
+        {
+            type: "primary",
+            text: "发送验证码",
+            click: (e) => {
+                submitForm();
+            },
+        },
+    ],
+});
+
+
+const getEmailCode = () => {
+    formDataRef.value.validateField("email", (valid) => {
+        if (!valid) {
+            return;
+        }
+        dialogConfig4SendMailCode.show = true;
+    });
+};
 </script>
 <style lang="scss" scoped>
 .login-body {
