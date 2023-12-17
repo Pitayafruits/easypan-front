@@ -19,6 +19,7 @@ import Utils from '@/utils/Verify'
 
 //自定义组件
 import Dialog from '@/components/Dialog.vue'
+import Verify from "@/utils/Verify";
 
 const app = createApp(App);
 
@@ -26,4 +27,8 @@ app.use(router);
 app.use(ElementPlus);
 
 app.component("Dialog", Dialog)
+
+// 配置全局组件
+app.config.globalProperties.Verfiy = Verify
+
 app.mount("#app");
