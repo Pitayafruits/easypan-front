@@ -14,6 +14,9 @@ import '@/assets/base.scss'
 //引入cookies
 import VueCookies from 'vue-cookies'
 
+//引入校验工具类
+import Utils from '@/utils/Verify'
+
 //自定义组件
 import Dialog from '@/components/Dialog.vue'
 
