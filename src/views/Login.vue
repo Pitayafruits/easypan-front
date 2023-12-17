@@ -46,7 +46,7 @@
                         </el-popover>
                     </el-form-item>
                     <!-- 昵称 -->
-                    <el-form-item peop="nicekName" size="large" v-if="opType == 0">
+                    <el-form-item peop="nicekName" size="large" v-if="opType === 0">
                         <el-input v-model.trim="formData.nickeName" placeholder="请输入昵称" size="large" maxLength="20">
                             <template #prefix>
                                 <span class="iconfont icon-account"></span>
@@ -103,9 +103,9 @@
                 <!-- 登录按钮 -->
                 <el-form-item>
                     <el-button type="primary" class="op-btn" size="large">
-                        <span v-if="opType == 0">注册</span>
-                        <span v-if="opType == 1">登录</span>
-                        <span v-if="opType == 2">重置密码</span>
+                        <span v-if="opType === 0">注册</span>
+                        <span v-if="opType === 1">登录</span>
+                        <span v-if="opType === 2">重置密码</span>
                     </el-button>
                 </el-form-item>
             </el-form>
@@ -153,14 +153,17 @@ const showPanel = (type) => {
 const formData = ref({});
 const formDataRef = ref();
 const rules = {
-    email: [{ required: true, message: '请输入正确的邮箱！' }]
+    email: [
+        { required: true, message: '请输入正确的邮箱！' },
+        { validator: proxy.Verfiy.email, message: "请输入正确的邮箱！"}
+    ]
 };
 
 const checkCodeUrl = ref(api.checkCode);
 const checkCodeUrl4SendMailCode = ref(api.checkCode);
 
 const changeCheckCode = (type) => {
-    if (type == 0) {
+    if (type === 0) {
         checkCodeUrl.value = api.checkCode + "?type=" + type + "&time=" + new Date().getTime();
     } else {
         checkCodeUrl4SendMailCode.value = api.checkCode + "?type=" + type + "&time=" + new Date().getTime();
@@ -192,6 +195,13 @@ const getEmailCode = () => {
             return;
         }
         dialogConfig4SendMailCode.show = true;
+        nextTick( () => {
+          changeCheckCode(1);
+          formData4SendMailCodeRef.value.resetFields();
+          formData4SendMailCode.value = {
+            email: formData.value.email ,
+          }
+        })
     });
 };
 </script>
